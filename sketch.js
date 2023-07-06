@@ -10,19 +10,33 @@ let targetLabel;
 function keyPressed() {
   if (key == "s") {
     brain.saveData();
-  } else {
-    // nach Drücken eines Buchstaben - ymca- 10 Sekunden warten und dann für 10 Sek Daten aufnehmen
-    targetLabel = key;
-    console.log(targetLabel);
-    setTimeout(function() {
-      console.log("collecting");
-      state = "collecting"; // Statemachine wird auf collecting gesetzt
-      setTimeout(function() {
-        console.log("not collecting");
-        state = "waiting"; // Statemachine ist wieder auf waiting
-      }, 10000);
-    }, 10000);
   }
+  if (key == "n") {
+    // nach Drücken eines Buchstaben - ymca- 10 Sekunden warten und dann für 10 Sek Daten aufnehmen
+    // ich habe diese function nach unten verlagert damits ein bisschen uebersichtlicher ist
+    saveNewPose();
+  }
+}
+// diese function nimmt einen String und zeigt ihn als text im Browser an
+function displayText(text) {
+  node = document.getElementById("text-display");
+  node.innerText = text;
+}
+function saveNewPose() {
+  displayText("enter a name for your pose");
+  targetLabel = prompt("what should we call your pose?");
+  console.log(targetLabel);
+  displayText(`saving pose with the name ${targetLabel}`);
+  setTimeout(function() {
+    console.log("collecting...");
+    displayText("collecting...");
+    state = "collecting"; // Statemachine wird auf collecting gesetzt
+    setTimeout(function() {
+      console.log("not collecting");
+      displayText(" Press n to record a new pose ");
+      state = "waiting"; // Statemachine ist wieder auf waiting
+    }, 10000);
+  }, 10000);
 }
 
 function setup() {
