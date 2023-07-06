@@ -34,13 +34,15 @@ function setup() {
 
   let options = {
     input: 34, //für jedes Körperteil ->17 Werte jeweils x und y- Werte
-
+    // ich verstehe das nicht, heisst das, dass insgesamt nur 4 output werte entstehen?
+    // vielleicht sollten wir das dynamischer gestalten, falls wir mal andere koerperteile erfassen wollen
     outputs: 4, //Y M C A
+    //
     task: "classification",
     debug: true,
   };
   brain = ml5.neuralNetwork(options);
-  brain.loadData("ymca.json", dataReady); //speicher die Werte in ein json Datei
+  brain.loadData("ymca.json", dataReady); // speichere die Werte in ein json Datei
 }
 
 function dataReady() {
@@ -52,7 +54,9 @@ function finished() {
   console.log("model trained");
   brain.save();
 }
-
+// diese Function wird gecallt, wenn eine pose erkannt wird (die punkte)
+// sie malt die punkte ins video
+//
 function gotPoses(poses) {
   //console.log(poses);
   if (poses.length > 0) {
