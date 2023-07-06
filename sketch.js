@@ -5,13 +5,13 @@ let skeleton;
 let brain;
 
 let state = "waiting"; //Statemachine wird initialisiert
-let targetLabel; 
+let targetLabel;
 
 function keyPressed() {
   if (key == "s") {
     brain.saveData();
-    
-  } else { // nach Drücken eines Buchstaben - ymca- 10 Sekunden warten und dann für 10 Sek Daten aufnehmen
+  } else {
+    // nach Drücken eines Buchstaben - ymca- 10 Sekunden warten und dann für 10 Sek Daten aufnehmen
     targetLabel = key;
     console.log(targetLabel);
     setTimeout(function() {
@@ -32,15 +32,15 @@ function setup() {
   poseNet = ml5.poseNet(video, modelLoaded);
   poseNet.on("pose", gotPoses);
 
+  let options = {
+    input: 34, //für jedes Körperteil ->17 Werte jeweils x und y- Werte
 
-let options = {
-  input: 34, //für jedes Körperteil ->17 Werte jeweils x und y- Werte
-  outputs: 4, //Y M C A
-  task: "classification",
-  debug: true,
-};
-brain = ml5.neuralNetwork(options);
-brain.loadData('ymca.json', dataReady); //speicher die Werte in ein json Datei
+    outputs: 4, //Y M C A
+    task: "classification",
+    debug: true,
+  };
+  brain = ml5.neuralNetwork(options);
+  brain.loadData("ymca.json", dataReady); //speicher die Werte in ein json Datei
 }
 
 function dataReady() {
@@ -58,17 +58,18 @@ function gotPoses(poses) {
   if (poses.length > 0) {
     pose = poses[0].pose;
     skeleton = poses[0].skeleton;
-    if (state == 'collecting'){ //Wenn Statemachine auf 'collecting', dann wird ein Array mit den Inputwerten erstellt
-    let inputs = [];
-    for (let i = 0; i < pose.keypoints.length; i++) {
-      let x = pose.keypoints[i].position.x;
-      let y = pose.keypoints[i].position.y;
-      inputs.push(x);
-      inputs.push(y); //Haut alle x und y Wert in ein Array namens input
-    }
-    let target = [targetLabel];
+    if (state == "collecting") {
+      //Wenn Statemachine auf 'collecting', dann wird ein Array mit den Inputwerten erstellt
+      let inputs = [];
+      for (let i = 0; i < pose.keypoints.length; i++) {
+        let x = pose.keypoints[i].position.x;
+        let y = pose.keypoints[i].position.y;
+        inputs.push(x);
+        inputs.push(y); //Haut alle x und y Wert in ein Array namens input
+      }
+      let target = [targetLabel];
 
-    brain.addData(inputs, target);
+      brain.addData(inputs, target);
     }
   }
 }
@@ -91,7 +92,7 @@ function draw() {
       let x = pose.keypoints[i].position.x;
       let y = pose.keypoints[i].position.y;
       fill(255, 0, 0);
-      ellipse(x, y, d/2, d/2);
+      ellipse(x, y, d / 2, d / 2);
     }
 
     for (let i = 0; i < skeleton.length; i++) {
@@ -103,6 +104,3 @@ function draw() {
     }
   }
 }
-
-
-
