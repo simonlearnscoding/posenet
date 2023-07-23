@@ -47,21 +47,22 @@ function setup() {
   poseNet.on("pose", gotPoses);
 
   let options = {
-    input: 34, //für jedes Körperteil ->17 Werte jeweils x und y- Werte
+    input: 34, //ein InputWert für jedes Körperteil ->17 Werte (jeweils x und y) also 34 Input-Werte
     // ich verstehe das nicht, heisst das, dass insgesamt nur 4 output werte entstehen?
     // vielleicht sollten wir das dynamischer gestalten, falls wir mal andere koerperteile erfassen wollen
-    outputs: 4, //Y M C A
+    outputs: 4, //in Diesem Fall nur 4 Outputwerte: 'Y M C A'
     //
     task: "classification",
     debug: true,
   };
   brain = ml5.neuralNetwork(options);
-  brain.loadData("ymca.json", dataReady); // speichere die Werte in ein json Datei
+  brain.loadData('~/Documents/Privat/Coding/posenet/ymca.json', dataReady); // speichere die Werte in ein json Datei
+  
 }
 
 function dataReady() {
   brain.normalizeData();
-  brain.train({ epochs: 50 }, finished);
+  brain.train({epochs: 50}, finished);
 }
 
 function finished() {
